@@ -1,4 +1,4 @@
-package org.mbmg.udp;
+package org.mbmg.udp.server;
 /*
  * Copyright 2012 The Netty Project
  *
@@ -26,8 +26,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class ServerHandler extends
         SimpleChannelInboundHandler<DatagramPacket>
-{
-    
+{   
     private static final Random random = new Random();
     private int counter;
     private int consumerCounter;
@@ -35,27 +34,7 @@ public class ServerHandler extends
     
     public ServerHandler()
     {
-        for (int i = 0; i < 512; i++)
-        {
-            new Consumer().start();
-        }
-    }
-    
-    // Quotes from Mohandas K. Gandhi:
-    private static final String[] quotes = {
-            "Where there is love there is life.",
-            "First they ignore you, then they laugh at you, then they fight you, then you win.",
-            "Be the change you want to see in the world.",
-            "The weak can never forgive. Forgiveness is the attribute of the strong.", };
-    
-    private static String nextQuote()
-    {
-        int quoteId;
-        synchronized (random)
-        {
-            quoteId = random.nextInt(quotes.length);
-        }
-        return quotes[quoteId];
+        new Consumer().start();
     }
     
     @Override
@@ -83,18 +62,9 @@ public class ServerHandler extends
                     UdpRequest request = queue.take();
                     System.err.println(Thread.currentThread().getName() + " "
                             + request.getPacket() + " " + ++consumerCounter);
-                    sleep(80); // Processing time
                     
-                    if ("QOTM?".equals(request.getPacket().content()
-                            .toString(CharsetUtil.UTF_8)))
-                    {
-                        request.getContext().write(
-                                new DatagramPacket(Unpooled.copiedBuffer(
-                                        "QOTM: " + nextQuote()
-                                                + consumerCounter,
-                                        CharsetUtil.UTF_8), request.getPacket()
-                                        .sender()));
-                    }
+                    String recievedContent = request.getPacket().content().toString(CharsetUtil.UTF_8);
+                    System.out.println(recievedContent);
                 } catch (InterruptedException e)
                 {
                     e.printStackTrace(); // To change body of catch statement

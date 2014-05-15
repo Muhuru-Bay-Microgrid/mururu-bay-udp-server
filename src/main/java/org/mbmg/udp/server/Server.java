@@ -1,4 +1,4 @@
-package org.mbmg.udp;
+package org.mbmg.udp.server;
 /*
  * Copyright 2012 The Netty Project
  *

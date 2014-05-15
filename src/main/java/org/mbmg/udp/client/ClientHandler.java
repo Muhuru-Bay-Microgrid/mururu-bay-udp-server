@@ -1,4 +1,4 @@
-package org.mbmg.udp;
+package org.mbmg.udp.client;
 /*
  * Copyright 2012 The Netty Project
  *
@@ -32,10 +32,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<DatagramPacket> {
     protected void channelRead0(ChannelHandlerContext arg0, DatagramPacket msg)
             throws Exception
     {
-        String response = msg.content().toString(CharsetUtil.UTF_8);
-        if (response.startsWith("QOTM: ")) {
-            System.out.println("Quote of the Moment: " + response.substring(6));
-            //ctx.close();
-        }   
+        // Server not sending response.
+        // String response = msg.content().toString(CharsetUtil.UTF_8);
     }
 }

@@ -24,6 +24,8 @@ import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.mbmg.udp.util.*;
+
 public class ServerHandler extends
         SimpleChannelInboundHandler<DatagramPacket>
 {   
@@ -65,6 +67,8 @@ public class ServerHandler extends
                     
                     String recievedContent = request.getPacket().content().toString(CharsetUtil.UTF_8);
                     System.out.println(recievedContent);
+                    Record newRecord = Parser.toRecord(recievedContent);
+                    
                 } catch (InterruptedException e)
                 {
                     e.printStackTrace(); // To change body of catch statement

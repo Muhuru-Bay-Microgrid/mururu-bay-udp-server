@@ -33,13 +33,13 @@ dependencies {
     /**
      * Mandatory dependencies for using Spock test framework
      */
-    testCompile "org.codehaus.groovy:groovy-all:2.2.2"
-    testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
+    testCompile 'org.codehaus.groovy:groovy-all:2.2.2'
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
     /**
      * Optional dependencies for using Spock
      */
-    testCompile "org.hamcrest:hamcrest-core:1.2"
-    testRuntime "cglib:cglib-nodep:2.2"
+    testCompile 'org.hamcrest:hamcrest-core:1.2'
+    testRuntime 'cglib:cglib-nodep:2.2'
 
 }
 

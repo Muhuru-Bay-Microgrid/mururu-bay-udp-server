@@ -23,7 +23,16 @@ ext {
     project.version = '1.0.0.BUILD-SNAPSHOT'
 }
 
-mainClassName = "org.mbmg.udp.Server"
+mainClassName = "org.mbmg.udp.server.Server"
+
+jar {
+    from {
+         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    } 
+    manifest {
+        attributes("Main-Class":"org.mbmg.udp.server.Server")
+    }
+}
 
 dependencies {
     compile 'io.netty:netty-all:4.0.19.Final'

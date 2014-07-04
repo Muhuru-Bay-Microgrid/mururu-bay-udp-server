@@ -14,7 +14,6 @@ package org.mbmg.udp.server;
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;

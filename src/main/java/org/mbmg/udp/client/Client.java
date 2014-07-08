@@ -52,13 +52,9 @@ public class Client extends Thread {
         InetSocketAddress address = new InetSocketAddress("localhost", port);
 
         String sendingContent = "4:#STD:123456,511;L:308;TM:1404120015;D:1;T:01;C:44;A00:0.632;A01:00000;A02:00000;A03:00000;A04:00000;A05:00000;A06:00000;A07:00000;A08:00000;A09:00000;A10:00000;A11:00000;A12:00000;A13:22.31;A14:22.68;P01:00000000;P02:00000000;P03:00000000;P04:00000000;P05:00000000;P06:00000000;K01:13300000000000000;O01:0000;28#\r\n";
+        
         ch.writeAndFlush(new DatagramPacket(Unpooled.copiedBuffer(sendingContent, CharsetUtil.UTF_8), address)).sync();
-
-        // ClientHandler will close the DatagramChannel when a response is received.
-        //If the channel is not closed within 5 seconds, print an error message and quit.
-        //if (!ch.closeFuture().await(10000)) {
-        //  System.err.println("QOTM request timed out.");
-        //}
+        
       } finally {
         group.shutdownGracefully();
       }

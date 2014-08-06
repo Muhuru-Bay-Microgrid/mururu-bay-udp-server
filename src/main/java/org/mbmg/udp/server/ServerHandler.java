@@ -63,10 +63,14 @@ public class ServerHandler extends
                     UdpRequest request = queue.take();
                     System.err.println(Thread.currentThread().getName() + " "
                             + request.getPacket() + " " + ++consumerCounter);
-                    
                     String recievedContent = request.getPacket().content().toString(CharsetUtil.UTF_8);
                     System.out.println(recievedContent);
-                    Record newRecord = Parser.toRecord(recievedContent);
+                    // To ignore the packets that the datalogger sends to test connection
+                    // and which has the following pattern: @67688989
+                    if (!recievedContent.startsWith("@"))
+                    {
+                    	Record newRecord = Parser.toRecord(recievedContent);
+                    }
                     
                 } catch (InterruptedException e)
                 {

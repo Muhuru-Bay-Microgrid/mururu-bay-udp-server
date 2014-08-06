@@ -21,6 +21,14 @@ public class Record {
         this.timestamp = timestamp;
         this.channelData = channelData;
     }
+    
+    public Record(String recordType, String stationID, LocalDateTime timestamp, Map<String,
+            Double> channelData) {
+        this.recordType = recordType;
+        this.stationID = stationID;
+        this.timestamp = timestamp;
+        this.channelData = channelData;
+    }
 
     @Override
     public boolean equals(Object o) {

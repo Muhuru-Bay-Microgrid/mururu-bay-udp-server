@@ -27,7 +27,7 @@ public class Parser {
      * @return a LocalDateTime instance
      */
     public static LocalDateTime parseDate(String timeString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("'TM:'yyMMddHHmm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("'TM:'yyMMddHHmmss");
         return LocalDateTime.parse(timeString, formatter);
 
     }
@@ -56,9 +56,9 @@ public class Parser {
     public static Record toRecord(String line) {
         String[] columns = line.split(";");
         String[] headers = columns[0].split(":");
-        return new Record(Long.parseLong(headers[0]),
-                headers[1],
-                headers[2].split(",")[0],
+        //return new Record(Long.parseLong(headers[0]),
+        return new Record(headers[0],
+                headers[1].split(",")[0],
                 parseDate(columns[2]),
                 Stream.of(Arrays.copyOfRange(columns, 1, columns.length - 1)).
                         collect(Collectors.

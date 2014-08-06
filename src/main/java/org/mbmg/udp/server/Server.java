@@ -54,8 +54,10 @@ public class Server {
         int port;
         if (args.length > 0) {
             port = Integer.parseInt(args[0]);
+            System.out.println("DEBUG - Port provided: "+port);
         } else {
             port = 8080;
+            System.out.println("DEBUG - No port provided, use default one: "+port);
         }
         new Server(port).run();
     }

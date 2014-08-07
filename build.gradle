@@ -31,17 +31,26 @@ def buildTime() {
 }
 
 ext {
-
     versionMajor = 1
     versionMinor = 0
     versionPatch = 0
     versionBuild = buildTime() // if you want build timestamp qualifiers
     //versionBuild = gitSha() // or you can use the gitSha() if traceability to a commit is more important
     project.version = "${versionMajor}.${versionMinor}.${versionPatch}.v${versionBuild}"
+
+    distSpec = copySpec {
+        into("conf") {
+            from "src/main/conf"
+        }
+        into("bin") {
+            from "src/main/bin"
+        }
+        into("lib") {
+            from "src/main/lib"
+            from "build/libs"
+        }
+    }
 }
-
-
-
 
 
 mainClassName = "org.mbmg.udp.server.Server"
@@ -76,3 +85,12 @@ dependencies {
 task wrapper(type: Wrapper) {
     gradleVersion = '1.4'
 }
+
+
+task distBin(type: Zip, dependsOn: [jar, assemble]) {
+    appendix = 'binary'
+    into("muhuru-bay-udp-server") {
+        with distSpec
+    }
+}
+

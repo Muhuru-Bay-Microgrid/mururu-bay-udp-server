@@ -50,6 +50,8 @@ ext {
     //versionBuild = gitSha() // or you can use the gitSha() if traceability to a commit is more important
     project.version = "${versionMajor}.${versionMinor}.${versionPatch}.v${versionBuild}"
 
+	delete fileTree(dir: "build/libs")
+	
     distSpec = copySpec {
         into("conf") {
             from "src/main/conf"

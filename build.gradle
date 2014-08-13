@@ -1,9 +1,21 @@
 import java.text.SimpleDateFormat
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.netflix.nebula:gradle-ospackage-plugin:1.10.0'
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
 apply plugin: 'application'
+apply plugin: 'os-package'
+
 
 compileJava {
     sourceCompatibility = 1.8
@@ -93,4 +105,58 @@ task distBin(type: Zip, dependsOn: [jar, assemble]) {
         with distSpec
     }
 }
+
+ospackage {
+    packageName = 'muhuru-bay-udp-server'
+    version = "${versionMajor}.${versionMinor}.${versionPatch}"
+    release = 1
+    arch = I386
+    os = LINUX
+
+    preInstall file('scripts/rpm/preInstall.sh')
+    postInstall file('scripts/rpm/postInstall.sh')
+    preUninstall 'touch /tmp/myfile'
+    postUninstall file('scripts/rpm/postUninstall.sh')
+
+    requires('java')
+
+    into '/opt/muhuru-bay-udp-server'
+
+    from(jar.outputs.files) {
+        into 'lib'
+    }
+    from('src/main/lib') {
+        into 'lib'
+    }
+    from('scripts') {
+        into 'bin'
+        exclude 'database'
+        fileMode = 0550
+    }
+    from('src/main/resources') {
+        fileType CONFIG | NOREPLACE
+        into 'conf'
+    }
+    from('home') {
+        // Creating directory entries (or not) in the RPM is normally left up to redline-rpm library.
+        // Use this to explicitly create an entry -- for setting directory fileMode on system directories.
+        createDirectoryEntry = true
+        fileMode = 0500
+        into 'home'
+    }
+    from('endorsed') {
+        // Will tell redline-rpm not to auto create directories, which
+        // is sometimes necessary to avoid rpm directory conflicts
+        addParentDirs = false
+        into '/usr/share/tomcat/endorsed'
+    }
+
+}
+
+buildRpm {
+    requires('bar', '2.2', GREATER | EQUAL)
+    requires('baz', '1.0.1', LESS)
+    link('/opt/foo/bin/foo.init', '/etc/init.d/foo')
+}
+
 

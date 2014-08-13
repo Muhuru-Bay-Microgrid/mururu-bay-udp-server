@@ -18,12 +18,12 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.util.CharsetUtil;
+import org.mbmg.udp.util.Parser;
+import org.mbmg.udp.util.Record;
 
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import org.mbmg.udp.util.*;
 
 public class ServerHandler extends
         SimpleChannelInboundHandler<DatagramPacket>
@@ -32,6 +32,7 @@ public class ServerHandler extends
     private int counter;
     private int consumerCounter;
     private BlockingQueue<UdpRequest> queue = new LinkedBlockingQueue<UdpRequest>();
+
     
     public ServerHandler()
     {
@@ -70,6 +71,7 @@ public class ServerHandler extends
                     if (!recievedContent.startsWith("@"))
                     {
                     	Record newRecord = Parser.toRecord(recievedContent);
+                        System.out.println(newRecord.toGraphite());
                     }
                     
                 } catch (InterruptedException e)

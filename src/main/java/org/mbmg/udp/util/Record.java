@@ -1,12 +1,40 @@
 package org.mbmg.udp.util;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by rpomeroy on 4/26/14.
  */
 public class Record {
+
+    // stationId_channel value timestamp
+    private static String GRAPHITE_FORMAT = "%s_%s %d %s\n";
+    private static ZoneId UTC = ZoneId.of("UTC");
+    private static Map<String,String> channelCodeToName = new HashMap<>();
+
+    static {
+        channelCodeToName.put("A00", "Humidity");
+        channelCodeToName.put("A01", "Wind_Speed");
+        channelCodeToName.put("A02", "Wind_Direction");
+        channelCodeToName.put("A03", "Inverter_AC_Voltage");
+        channelCodeToName.put("A04", "AC_Current");
+        channelCodeToName.put("A05", "Wind_Controller_DC_Voltage");
+        channelCodeToName.put("A06", "Solar_Controller_DC_Voltage");
+        channelCodeToName.put("A07", "Station_Battery_DC_Voltage");
+        channelCodeToName.put("A08", "Battery_Bus_DC_Voltage");
+        channelCodeToName.put("A09", "Active_Power");
+        channelCodeToName.put("A10", "Reactive_Power");
+        channelCodeToName.put("A11", "Power_Factor");
+        channelCodeToName.put("A12", "Frequency");
+        channelCodeToName.put("A13", "Temperature_1");
+        channelCodeToName.put("A14", "Temperature_2");
+    }
+
     private Long recordNumber;
     private String recordType;
     private String stationID;
@@ -74,5 +102,22 @@ public class Record {
 
     public Map<String, Double> getChannelData() {
         return channelData;
+    }
+
+    public List<String> toGraphite() {
+        long epochTime = getEpochTime();
+        List<String> data = new ArrayList();
+        for (Map.Entry<String,Double> entry : this.channelData.entrySet()) {
+            data.add(String.format(GRAPHITE_FORMAT,
+                    getStationID(),
+                    channelCodeToName.getOrDefault(entry.getKey(), entry.getKey()),
+                    entry.getValue(),
+                    epochTime));
+        }
+        return data;
+    }
+
+    private long getEpochTime() {
+        return this.getTimestamp().atZone(UTC).toEpochSecond();
     }
 }

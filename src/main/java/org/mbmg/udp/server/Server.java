@@ -50,15 +50,19 @@ public class Server {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main() throws Exception {
         int port;
-        if (args.length > 0) {
-            port = Integer.parseInt(args[0]);
+        /*
+        if (args.length > 1) {
+            port = Integer.parseInt(args[1]);
             System.out.println("DEBUG - Port provided: "+port);
         } else {
-            port = 8080;
+            port = 6002;
             System.out.println("DEBUG - No port provided, use default one: "+port);
         }
+        */
+        // Retrieve port specified in Sytem properties. Used port 6001 as default
+        port = Integer.parseInt(System.getProperty("org.mbmg.udp.server.port","6002"));
         new Server(port).run();
     }
 }

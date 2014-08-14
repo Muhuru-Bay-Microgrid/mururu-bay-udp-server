@@ -21,16 +21,18 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 
 /**
- * A UDP server that responds to the QOTM (quote of the moment) request to a
- * {@link Client}.
  *
- * Inspired by <a href="http://goo.gl/BsXVR">the official Java tutorial</a>.
+ String* Inspired by <a href="http://goo.gl/BsXVR">the official Java tutorial</a>.
  */
 public class Server {
-
+    // TODO - we need a ShutdownHook to cleanly release socket resources
     private final int port;
+    private final String graphiteHost;
+    private final int graphitePort;
 
-    public Server(int port) {
+    public Server(int port, String graphiteHost, int graphitePort) {
+        this.graphiteHost = graphiteHost;
+        this.graphitePort = graphitePort;
         this.port = port;
     }
 
@@ -42,8 +44,7 @@ public class Server {
              .channel(NioDatagramChannel.class)
              .option(ChannelOption.SO_RCVBUF, 1048576)
              .option(ChannelOption.SO_SNDBUF, 1048576)
-             .handler(new ServerHandler());
-
+             .handler(new ServerHandler(graphiteHost, graphitePort));
             b.bind(port).sync().channel().closeFuture().await();
         } finally {
             group.shutdownGracefully();
@@ -52,6 +53,8 @@ public class Server {
 
     public static void main() throws Exception {
         int port;
+        int graphitePort;
+        String graphiteHost;
         /*
         if (args.length > 1) {
             port = Integer.parseInt(args[1]);
@@ -63,6 +66,8 @@ public class Server {
         */
         // Retrieve port specified in Sytem properties. Used port 6001 as default
         port = Integer.parseInt(System.getProperty("org.mbmg.udp.server.port","6002"));
-        new Server(port).run();
+        graphiteHost = System.getProperty("org.mbmg.graphite.server.host","localhost");
+        graphitePort = Integer.parseInt(System.getProperty("org.mbmg.graphite.server.port","2003"));
+        new Server(port, graphiteHost, graphitePort).run();
     }
 }

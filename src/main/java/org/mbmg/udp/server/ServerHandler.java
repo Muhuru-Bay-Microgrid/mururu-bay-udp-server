@@ -82,7 +82,7 @@ public class ServerHandler extends
                             graphiteClient.sendData(chanelSample);
                         }
                     }
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace(); // To change body of catch statement
                     // use File | Settings | File
                     // Templates.

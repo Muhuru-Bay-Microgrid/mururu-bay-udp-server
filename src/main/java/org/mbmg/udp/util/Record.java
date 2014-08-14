@@ -13,7 +13,7 @@ import java.util.Map;
 public class Record {
 
     // stationId_channel value timestamp
-    private static String GRAPHITE_FORMAT = "%s_%s %d %s\n";
+    private static String GRAPHITE_FORMAT = "%s.%s.%s %f %s\n";
     private static ZoneId UTC = ZoneId.of("UTC");
     private static Map<String,String> channelCodeToName = new HashMap<>();
 
@@ -105,11 +105,13 @@ public class Record {
     }
 
     public List<String> toGraphite() {
+        // path value timestamp \n
         long epochTime = getEpochTime();
         List<String> data = new ArrayList();
         for (Map.Entry<String,Double> entry : this.channelData.entrySet()) {
             data.add(String.format(GRAPHITE_FORMAT,
                     getStationID(),
+                    entry.getKey(),
                     channelCodeToName.getOrDefault(entry.getKey(), entry.getKey()),
                     entry.getValue(),
                     epochTime));

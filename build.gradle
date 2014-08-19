@@ -85,6 +85,7 @@ dependencies {
     compile 'io.netty:netty-all:4.0.19.Final'
     compile 'ch.qos.logback:logback-classic:1.1.2'
     compile 'ch.qos.logback:logback-core:1.1.2'
+    compile 'javassist:javassist:3.12.1.GA'
 
     /**
      * Mandatory dependencies for using Spock test framework

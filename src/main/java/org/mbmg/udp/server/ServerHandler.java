@@ -127,17 +127,21 @@ public class ServerHandler extends
         private static final Bootstrap bootstrap = new Bootstrap();
         private final String graphiteHost;
         private final int graphitePort;
+        private boolean started = false;
 
         private Channel connection;
 
         private GraphiteClient(String graphiteHost, int graphitePort) {
             this.graphiteHost = graphiteHost;
             this.graphitePort = graphitePort;
+            this.started = false;
         }
 
         public void startUp() {
             try {
-                bootstrap.group(group);
+                if(bootstrap.group() == null) {
+                    bootstrap.group(group);
+                }
                 bootstrap.channel(NioSocketChannel.class);
                 bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
                 bootstrap.handler(new ChannelInitializer<SocketChannel>() {
@@ -149,6 +153,7 @@ public class ServerHandler extends
                 });
                 ChannelFuture f = bootstrap.connect(graphiteHost, graphitePort).sync();
                 this.connection = f.channel();
+                started = true;
             } catch (Exception ex) {
                 ex.printStackTrace();
                 group.shutdownGracefully();
@@ -157,7 +162,7 @@ public class ServerHandler extends
 
         public void sendData(String data) {
             // Connect lazily to make start work even if graphite isn't up
-            if(connection == null) {
+            if(connection == null || started == false) {
                 startUp();
             }
             if (connection != null && connection.isOpen()) {

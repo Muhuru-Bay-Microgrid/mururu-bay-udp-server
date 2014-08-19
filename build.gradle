@@ -7,6 +7,7 @@ buildscript {
 
     dependencies {
         classpath 'com.netflix.nebula:gradle-ospackage-plugin:1.10.0'
+        classpath 'org.hidetake:gradle-ssh-plugin:0.3.10'
     }
 }
 
@@ -15,6 +16,7 @@ apply plugin: 'eclipse'
 apply plugin: 'groovy'
 apply plugin: 'application'
 apply plugin: 'os-package'
+apply plugin: 'ssh'
 
 
 compileJava {
@@ -164,6 +166,33 @@ buildRpm {
     requires('bar', '2.2', GREATER | EQUAL)
     requires('baz', '1.0.1', LESS)
     link('/opt/foo/bin/foo.init', '/etc/init.d/foo')
+}
+
+// Global settings
+ssh {
+    //identity = file('id_rsa')     // Enable public key authentication
+    knownHosts = allowAnyHosts    // Disable host key verification
+}
+
+// Add a remote host
+remotes {
+    udpServer {
+        host = 'datalogger.maciq.com'
+        user = 'datalogger'
+        password = 'xxxxxx'
+    }
+}
+
+task deploy(type: SshTask, dependsOn: distBin) {
+    description = 'Deploys the UDP Server'
+    ssh {
+        // Enable PTY allocation for sudo
+        pty = true
+    }
+    session(remotes.udpServer) {
+        put 'build/distributions/*.zip', 'muhuru-bay-dashboard/muhuru-bay-udp-server'
+        // execute bla bla bla
+    }
 }
 
 

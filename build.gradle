@@ -45,7 +45,7 @@ def buildTime() {
 ext {
     versionMajor = 1
     versionMinor = 0
-    versionPatch = 0
+    versionPatch = 1
     versionBuild = buildTime() // if you want build timestamp qualifiers
     //versionBuild = gitSha() // or you can use the gitSha() if traceability to a commit is more important
     project.version = "${versionMajor}.${versionMinor}.${versionPatch}.v${versionBuild}"
@@ -62,6 +62,9 @@ ext {
         into("lib") {
             from "src/main/lib"
             from "build/libs"
+        }
+        into("logs") {
+            from "src/main/logs"
         }
     }
 }
@@ -146,6 +149,7 @@ ospackage {
         fileMode = 0500
         into 'home'
     }
+
     from('endorsed') {
         // Will tell redline-rpm not to auto create directories, which
         // is sometimes necessary to avoid rpm directory conflicts

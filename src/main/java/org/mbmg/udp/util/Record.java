@@ -13,28 +13,75 @@ import java.util.Map;
 public class Record {
 
     // stationId_channel value timestamp
-    private static String GRAPHITE_FORMAT = "%s.%s.%s %f %s\n";
+    private static String GRAPHITE_FORMAT = "%s.%s.%s.%s %f %s\n";
     private static ZoneId UTC = ZoneId.of("UTC");
     private static Map<String,String> channelCodeToName = new HashMap<>();
+    private static Map<String,String> channelCodeToStatus = new HashMap<>();
 
     static {
         channelCodeToName.put("A00", "Humidity");
-        channelCodeToName.put("A01", "Wind_Speed");
-        channelCodeToName.put("A02", "Wind_Direction");
+        channelCodeToName.put("A01", "Solar_Controller_DC_Voltage");
+        channelCodeToName.put("A02", "Battery_Bus_DC_Voltage");
         channelCodeToName.put("A03", "Inverter_AC_Voltage");
-        channelCodeToName.put("A04", "AC_Current");
-        channelCodeToName.put("A05", "Wind_Controller_DC_Voltage");
-        channelCodeToName.put("A06", "Solar_Controller_DC_Voltage");
-        channelCodeToName.put("A07", "Station_Battery_DC_Voltage");
-        channelCodeToName.put("A08", "Battery_Bus_DC_Voltage");
-        channelCodeToName.put("A09", "Active_Power");
-        channelCodeToName.put("A10", "Reactive_Power");
-        channelCodeToName.put("A11", "Power_Factor");
-        channelCodeToName.put("A12", "Frequency");
+        channelCodeToName.put("A04", "Inverter_AC_Current");
+        channelCodeToName.put("A05", "NA");
+        channelCodeToName.put("A06", "NA");
+        channelCodeToName.put("A07", "NA");
+        channelCodeToName.put("A08", "NA");
+        channelCodeToName.put("A09", "Inverter_Active_Power");
+        channelCodeToName.put("A10", "Inverter_Reactive_Power");
+        channelCodeToName.put("A11", "Inverter_Power_Factor");
+        channelCodeToName.put("A12", "Inverter_Frequency");
         channelCodeToName.put("A13", "Temperature_1");
         channelCodeToName.put("A14", "Temperature_2");
+        channelCodeToName.put("C", "Record_Number");
+        channelCodeToName.put("D", "NA");
+        channelCodeToName.put("K01", "NA");
+        channelCodeToName.put("L", "NA");
+        channelCodeToName.put("P01", "NA");
+        channelCodeToName.put("P02", "NA");
+        channelCodeToName.put("P03", "NA");
+        channelCodeToName.put("P04", "NA");
+        channelCodeToName.put("P05", "Energy_Counter");
+        channelCodeToName.put("P06", "NA");
+        channelCodeToName.put("O01", "NA");
+        channelCodeToName.put("T", "NA");
+        channelCodeToName.put("TM", "TimeStamp");
+        
     }
 
+    static {
+    	channelCodeToStatus.put("A00", "Enabled");
+    	channelCodeToStatus.put("A01", "Enabled");
+    	channelCodeToStatus.put("A02", "Enabled");
+    	channelCodeToStatus.put("A03", "Enabled");
+    	channelCodeToStatus.put("A04", "Enabled");
+    	channelCodeToStatus.put("A05", "Disabled");
+    	channelCodeToStatus.put("A06", "Disabled");
+    	channelCodeToStatus.put("A07", "Disabled");
+    	channelCodeToStatus.put("A08", "Disabled");
+    	channelCodeToStatus.put("A09", "Enabled");
+    	channelCodeToStatus.put("A10", "Enabled");
+    	channelCodeToStatus.put("A11", "Enabled");
+    	channelCodeToStatus.put("A12", "Enabled");
+    	channelCodeToStatus.put("A13", "Enabled");
+    	channelCodeToStatus.put("A14", "Enabled");
+    	channelCodeToStatus.put("C", "Enabled");
+    	channelCodeToStatus.put("D", "Disabled");
+    	channelCodeToStatus.put("K01", "Disabled");
+    	channelCodeToStatus.put("L", "Disabled");
+    	channelCodeToStatus.put("P01", "Disabled");
+    	channelCodeToStatus.put("P02", "Disabled");
+    	channelCodeToStatus.put("P03", "Disabled");
+    	channelCodeToStatus.put("P04", "Disabled");
+    	channelCodeToStatus.put("P05", "Enabled");
+    	channelCodeToStatus.put("P06", "Disabled");
+    	channelCodeToStatus.put("O01", "Disabled");
+    	channelCodeToStatus.put("T", "Disabled");
+    	channelCodeToStatus.put("TM", "Disabled");
+        
+    }
+    
     private Long recordNumber;
     private String recordType;
     private String stationID;
@@ -112,6 +159,7 @@ public class Record {
             data.add(String.format(GRAPHITE_FORMAT,
                     getStationID(),
                     entry.getKey(),
+                    channelCodeToStatus.getOrDefault(entry.getKey(), entry.getKey()),
                     channelCodeToName.getOrDefault(entry.getKey(), entry.getKey()),
                     entry.getValue(),
                     epochTime));

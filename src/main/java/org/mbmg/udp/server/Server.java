@@ -55,17 +55,8 @@ public class Server {
         int port;
         int graphitePort;
         String graphiteHost;
-        /*
-        if (args.length > 1) {
-            port = Integer.parseInt(args[1]);
-            System.out.println("DEBUG - Port provided: "+port);
-        } else {
-            port = 6002;
-            System.out.println("DEBUG - No port provided, use default one: "+port);
-        }
-        */
         // Retrieve port specified in Sytem properties. Used port 6001 as default
-        port = Integer.parseInt(System.getProperty("org.mbmg.udp.server.port","6002"));
+        port = Integer.parseInt(System.getProperty("org.mbmg.udp.server.port","6001"));
         graphiteHost = System.getProperty("org.mbmg.graphite.server.host","localhost");
         graphitePort = Integer.parseInt(System.getProperty("org.mbmg.graphite.server.port","2003"));
         new Server(port, graphiteHost, graphitePort).run();

@@ -179,7 +179,7 @@ remotes {
     udpServer {
         host = 'datalogger.maciq.com'
         user = 'datalogger'
-        password = 'xxxxx'
+        password = 'dalo$192'
     }
 }
 
@@ -190,13 +190,13 @@ task deploy(type: SshTask, dependsOn: [clean, distBin]) {
         pty = true
     }
     session(remotes.udpServer) {
-        put 'build/distributions/*.zip', 'muhuru-bay-dashboard/muhuru-bay-udp-server'
+        put 'build/distributions/*.zip', '/home/datalogger/muhuru-bay-dashboard/muhuru-bay-udp-server'
         execute '~/muhuru-bay-dashboard/muhuru-bay-udp-server/muhuru-bay-udp-server/bin/muhuru-bay-udp-server stop ||' +
                 ' true'
         execute 'mv ~/muhuru-bay-dashboard/muhuru-bay-udp-server/muhuru-bay-udp-server ' +
                 '~/muhuru-bay-dashboard/muhuru-bay-udp-server/old/muhuru-bay-udp-server_' + buildTime() + ' || true'
-        execute 'rm ~/muhuru-bay-dashboard/muhuru-bay-udp-server/*.zip || true'
         execute 'cd ~/muhuru-bay-dashboard/muhuru-bay-udp-server && unzip *.zip'
+        execute 'rm ~/muhuru-bay-dashboard/muhuru-bay-udp-server/*.zip || true'
         execute '~/muhuru-bay-dashboard/muhuru-bay-udp-server/muhuru-bay-udp-server/bin/muhuru-bay-udp-server start ' +
                 '|| true'
     }

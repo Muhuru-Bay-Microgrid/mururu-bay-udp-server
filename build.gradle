@@ -190,12 +190,12 @@ task deploy(type: SshTask, dependsOn: [clean, distBin]) {
         pty = true
     }
     session(remotes.udpServer) {
+        put 'build/distributions/*.zip', 'muhuru-bay-dashboard/muhuru-bay-udp-server'
         execute '~/muhuru-bay-dashboard/muhuru-bay-udp-server/muhuru-bay-udp-server/bin/muhuru-bay-udp-server stop ||' +
                 ' true'
         execute 'mv ~/muhuru-bay-dashboard/muhuru-bay-udp-server/muhuru-bay-udp-server ' +
                 '~/muhuru-bay-dashboard/muhuru-bay-udp-server/old/muhuru-bay-udp-server_' + buildTime() + ' || true'
         execute 'rm ~/muhuru-bay-dashboard/muhuru-bay-udp-server/*.zip || true'
-        put 'build/distributions/*.zip', 'muhuru-bay-dashboard/muhuru-bay-udp-server'
         execute 'cd ~/muhuru-bay-dashboard/muhuru-bay-udp-server && unzip *.zip'
         execute '~/muhuru-bay-dashboard/muhuru-bay-udp-server/muhuru-bay-udp-server/bin/muhuru-bay-udp-server start ' +
                 '|| true'

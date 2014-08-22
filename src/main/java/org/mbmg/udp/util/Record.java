@@ -16,7 +16,7 @@ public class Record {
     private static String GRAPHITE_FORMAT = "%s.%s.%s.%s %f %s\n";
     private static ZoneId UTC = ZoneId.of("UTC");
     private static Map<String,String> channelCodeToName = new HashMap<>();
-    private static Map<String,String> channelCodeToStatus = new HashMap<>();
+    private static List<String> activeChannels = new ArrayList<>();
 
     static {
         channelCodeToName.put("A00", "Humidity");
@@ -51,35 +51,20 @@ public class Record {
     }
 
     static {
-    	channelCodeToStatus.put("A00", "Enabled");
-    	channelCodeToStatus.put("A01", "Enabled");
-    	channelCodeToStatus.put("A02", "Enabled");
-    	channelCodeToStatus.put("A03", "Enabled");
-    	channelCodeToStatus.put("A04", "Enabled");
-    	channelCodeToStatus.put("A05", "Disabled");
-    	channelCodeToStatus.put("A06", "Disabled");
-    	channelCodeToStatus.put("A07", "Disabled");
-    	channelCodeToStatus.put("A08", "Disabled");
-    	channelCodeToStatus.put("A09", "Enabled");
-    	channelCodeToStatus.put("A10", "Enabled");
-    	channelCodeToStatus.put("A11", "Enabled");
-    	channelCodeToStatus.put("A12", "Enabled");
-    	channelCodeToStatus.put("A13", "Enabled");
-    	channelCodeToStatus.put("A14", "Enabled");
-    	channelCodeToStatus.put("C", "Enabled");
-    	channelCodeToStatus.put("D", "Disabled");
-    	channelCodeToStatus.put("K01", "Disabled");
-    	channelCodeToStatus.put("L", "Disabled");
-    	channelCodeToStatus.put("P01", "Disabled");
-    	channelCodeToStatus.put("P02", "Disabled");
-    	channelCodeToStatus.put("P03", "Disabled");
-    	channelCodeToStatus.put("P04", "Disabled");
-    	channelCodeToStatus.put("P05", "Enabled");
-    	channelCodeToStatus.put("P06", "Disabled");
-    	channelCodeToStatus.put("O01", "Disabled");
-    	channelCodeToStatus.put("T", "Disabled");
-    	channelCodeToStatus.put("TM", "Disabled");
-        
+    	activeChannels.add("A00");
+        activeChannels.add("A01");
+        activeChannels.add("A02");
+        activeChannels.add("A03");
+        activeChannels.add("A04");
+        activeChannels.add("A09");
+    	activeChannels.add("A10");
+    	activeChannels.add("A11");
+    	activeChannels.add("A12");
+    	activeChannels.add("A13");
+    	activeChannels.add("A14");
+    	activeChannels.add("C");
+    	activeChannels.add("P05");
+
     }
     
     private Long recordNumber;
@@ -156,13 +141,14 @@ public class Record {
         long epochTime = getEpochTime();
         List<String> data = new ArrayList();
         for (Map.Entry<String,Double> entry : this.channelData.entrySet()) {
-            data.add(String.format(GRAPHITE_FORMAT,
-                    getStationID(),
-                    entry.getKey(),
-                    channelCodeToStatus.getOrDefault(entry.getKey(), entry.getKey()),
-                    channelCodeToName.getOrDefault(entry.getKey(), entry.getKey()),
-                    entry.getValue(),
-                    epochTime));
+            if (activeChannels.contains(entry.getKey())) {
+                data.add(String.format(GRAPHITE_FORMAT,
+                        getStationID(),
+                        entry.getKey(),
+                        channelCodeToName.getOrDefault(entry.getKey(), entry.getKey()),
+                        entry.getValue(),
+                        epochTime));
+            }
         }
         return data;
     }

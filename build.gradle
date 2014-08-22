@@ -178,8 +178,8 @@ ssh {
 remotes {
     udpServer {
         host = 'datalogger.maciq.com'
-        user = 'datalogger'
-        password = 'dalo$192'
+        user = dataloggerUser
+        password = dataloggerPassword
     }
 }
 
@@ -200,6 +200,11 @@ task deploy(type: SshTask, dependsOn: [clean, distBin]) {
         execute '~/muhuru-bay-dashboard/muhuru-bay-udp-server/muhuru-bay-udp-server/bin/muhuru-bay-udp-server start ' +
                 '|| true'
     }
+}
+
+task printProps << {
+    println dataloggerUser
+    println dataloggerPassword
 }
 
 

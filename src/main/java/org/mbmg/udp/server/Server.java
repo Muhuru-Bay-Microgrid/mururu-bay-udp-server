@@ -51,7 +51,7 @@ public class Server {
         }
     }
 
-    public static void main() throws Exception {
+    public static void main(String[] args) throws Exception {
         int port;
         int graphitePort;
         String graphiteHost;
